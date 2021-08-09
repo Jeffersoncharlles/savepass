@@ -34,19 +34,29 @@ export function Home() {
 
     const response = await AsyncStorage.getItem(dataKey);
 
-    if (!response) return;
-
-    setData(JSON.parse(response));
-    setSearchListData(JSON.parse(response));
+    if (response) {
+      const secret = JSON.parse(response)
+      setData([...secret])
+      setSearchListData([...secret])
+    }
   }
 
   function handleFilterLoginData() {
     // Filter results inside data, save with setSearchListData
-    
+    if (searchText.trim() !== '') {
+      const filteredList = data.filter(item => (
+        item.service_name
+          .toLowerCase()
+          .includes(searchText.toLowerCase())        
+      ))
+        
+      setSearchListData(filteredList)    
+    }
   }
 
   function handleChangeInputText(text: string) {
     // Update searchText value
+    setSearchText(text)
   }
 
   useFocusEffect(useCallback(() => {
